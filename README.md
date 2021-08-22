@@ -95,7 +95,73 @@ initial begin: TEST_CASE
 
 endmodule
 ```
+## Sumador de 4 Bits
 
+Se usa el código para el sumador de 1 bit y sé instancia 4 veces 
+
+```verilog
+
+`timescale 1ns / 1ps
+module sum4b(xi, yi,co,zi);
+
+
+  input [3 :0] xi;
+  input [3 :0] yi;
+  output co;
+  output [3 :0] zi;
+
+  wire c1,c2,c3;
+  sum1bcc s0 (.A(xi[0]), .B(yi[0]), .Ci(0),  .Cout(c1) ,.S(zi[0]));
+  sum1bcc s1 (.A(xi[1]), .B(yi[1]), .Ci(c1), .Cout(c2) ,.S(zi[1]));
+  sum1bcc s2 (.A(xi[2]), .B(yi[2]), .Ci(c2), .Cout(c3) ,.S(zi[2]));
+  sum1bcc s3 (.A(xi[3]), .B(yi[3]), .Ci(c3), .Cout(co) ,.S(zi[3]));
+
+
+
+endmodule
+```
+
+Para la simulación, generamos el TestBench 
+
+```verilog
+`timescale 1ns / 1ps
+module sum4b_TB;
+
+  reg [3:0] A;
+  reg [3:0] B;
+
+  wire co;
+  wire [3:0] S;
+
+  sum4b uut (
+    .xi(A), 
+    .yi(B), 
+    .co(co), 
+    .zi(S)
+  );
+
+  
+  initial begin
+  
+    A=0;
+	 for (B = 0; B < 16; B = B + 1) begin
+      if (B==0)
+        A=A+1;
+      #5 ;
+		$display("El valor de %d + %d = %d",A, B,S) ;
+    end
+	
+  end      
+
+  initial begin: TEST_CASE
+     $dumpfile("sum4b_TB.vcd");
+     $dumpvars(-1, uut);
+     #(1200) $finish;
+   end
+
+
+endmodule
+```
 ### 3. implementacion 
 
 En mi caso no tengo la placa, así que los pasos siguientes fueron realizados junto con mis compañeros de grupo que si tiene las tarjetas físicas. 
