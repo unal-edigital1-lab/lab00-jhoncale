@@ -25,20 +25,85 @@ los fpga son dispositivos reconfigurables, en la cual se implementa logica combi
 
 se diseña un sumador de un bitA completo y un bit B completo, el sumador cuenta con un carrier y se ejecuta segun la tabala de verdad entregada anteriormente 
 
+
+
+
+```verilog
+
+module sum1bcc (A, B, Ci,Cout,S);
+
+  input  A;
+  input  B;
+  input  Ci;
+  output Cout;
+  output S;
+
+  reg [1:0] st;
+
+  assign S = st[0];
+  assign Cout = st[1];
+
+  always @ ( * ) begin
+  	st  = 	A+B+Ci;
+  end
+  
+endmodule
+
+```
+
+Se utilizan todas las posibles entradas para validar el simulador, para luego ejecutar el testBench, obteniendo todos los posibles valores
+
+
+
+
 ### 2. Bloque Funcional
-Según la especificación del sumador completo de 1 bit. se deduce que el bloque o modulo funcional esta dado por la siguiente gráfica:
+Según la especificación del sumador completo de 1 bit. se deduce que el bloque o modulo funcional esta dado por:
+
+```verilog
+module sum1bcc_TB;
+
+  reg x;
+  reg y;
+  reg c;
+  wire out;
+  wire z;
 
 
-### 3. Lógica Combinacional
-Optimizando el circuito, según la Tabla de verdad , podemos observar que la lógica combinación del ejercicio propuesto esta dada por:
+sum1bcc uut(x, y, c,out,z);
 
 
-### 4. Implementación HDL verilog
+initial begin
+forever begin
+x=0; y=0; c=0; #3;
+x=0; y=0; c=1; #3;
+x=0; y=1; c=0; #3;
+x=0; y=1; c=1; #3;
+x=1; y=0; c=0; #3;
+x=1; y=0; c=1; #3;
+x=1; y=1; c=0; #3;
+x=1; y=1; c=1; #3;
+end
 
-### 5.Simulación Funcional QUARTUS
 
-## EJERCICIO 2 Diseño de sumador 1 bit
+end
 
-### 1. Bloque Funcional
+initial begin: TEST_CASE
+     $dumpfile("sum1bcc_TB.vcd");
+     $dumpvars(-1, uut);
+     #(200) $finish;
+   end
 
-### 2. Descripción Funcional
+endmodule
+```
+
+### 3. implementacion 
+
+En mi caso no tengo la placa, así que los pasos siguientes fueron realizados junto con mis compañeros de grupo que si tiene las tarjetas físicas. 
+
+se asigna la targe a utilizar, luego se asignan los pines que se utilizaran para sintetizar el programa 
+
+Luego se visualizan las conexiones entre los pines y las entradas lógicas
+
+Por último se conecta la placa por medio del cable USB, instalando los certificados y driver.
+
+![image](https://user-images.githubusercontent.com/38961990/130364397-374f5433-a640-4475-923f-0e0d9418de65.png)
